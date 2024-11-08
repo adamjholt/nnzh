@@ -58,33 +58,81 @@ print("slope", (d2 - d1) / h)
 
 
 class Value:
-    def __init__(self, data, _children=(), _op=""):
+    def __init__(self, data, _children=(), _op="", label=""):
         self.data = data
+        self.grad = 0.0
+        self._backward = lambda: None
         self._prev = set(_children)
         self._op = _op
+        self.label = label
 
     def __repr__(self):
         return f"Value(data={self.data})"
 
     def __add__(self, other):
         out = Value(self.data + other.data, (self, other), "+")
+
+        def _backward():
+            self.grad += 1.0 * out.grad
+            other.grad += 1.0 * out.grad
+
+        out._backward = _backward
+
         return out
 
     def __mul__(self, other):
         out = Value(self.data * other.data, (self, other), "*")
+
+        def _backward():
+            self.grad += other.data * out.grad
+            other.grad += self.data * out.grad
+
+        out._backward = _backward
+
         return out
 
+    def tanh(self):
+        x = self.data
+        t = (math.exp(2 * x) - 1) / (math.exp(2 * x) + 1)
+        out = Value(t, (self,), "tanh")
 
-# %%
+        def _backward():
+            self.grad += (1 - t**2) * out.grad
 
-a = Value(2.0)
-b = Value(-3.0)
-c = Value(10.0)
+        out._backward = _backward
 
-d = a * b + c
+        return out
 
-d._prev
-d._op
+    def backward(self):
+
+        topo = []
+        visited = set()
+
+        def build_topo(v):
+            if v not in visited:
+                visited.add(v)
+                for child in v._prev:
+                    build_topo(child)
+                topo.append(v)
+
+        build_topo(self)
+
+        self.grad = 1.0
+        for node in reversed(topo):
+            node._backward()
+
+
+a = Value(2.0, label="a")
+b = Value(-3.0, label="b")
+c = Value(10.0, label="c")
+e = a * b
+e.label = "e"
+d = e + c
+d.label = "d"
+f = Value(-2.0, label="f")
+L = d * f
+L.label = "L"
+L
 
 
 # %%
@@ -134,5 +182,65 @@ def draw_dot(root):
 
 
 # %%
+
+draw_dot(L).render()
+
+# %%
+
+a.data += 0.01 * a.grad
+b.data += 0.01 * b.grad
+c.data += 0.01 * c.grad
+f.data += 0.01 * f.grad
+
+e = a * b
+d = e + c
+L = d * f
+
+print(L.data)
+
+# %%
+
+def lol():
+
+    h = 0.001
+
+    a = Value(2.0, label="a")
+    b = Value(-3.0, label="b")
+    c = Value(10.0, label="c")
+    e = a * b
+    e.label = "e"
+    d = e + c
+    d.label = "d"
+    f = Value(-2.0, label="f")
+    L = d * f
+    L.label = "L"
+    L1 = L.data
+
+    a = Value(2.0, label="a")
+    b = Value(-3.0, label="b")
+    b.data += h
+    c = Value(10.0, label="c")
+    e = a * b
+    e.label = "e"
+    d = e + c
+    d.label = "d"
+    f = Value(-2.0, label="f")
+    L = d * f
+    L.label = "L"
+    L2 = L.data
+
+    print((L2 - L1) / h)
+
+
+lol()
+
+# %%
+
+plt.plot(np.arange(-5,5,0.2), np.tanh(np.arange(-5,5,0.2))); plt.grid();
+plt.show()
+
+# %%
+
+
 
 
