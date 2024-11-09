@@ -265,36 +265,24 @@ draw_dot(o).render()
 
 # %%
 
+a = Value(3.0, label='a')
+b = a + a   ; b.label = 'b'
+b.backward()
 
+draw_dot(b).render()
 
+# %%
 
+a = Value(-2.0, label='a')
+b = Value(3.0, label='b')
+d = a * b    ; d.label = 'd'
+e = a + b    ; e.label = 'e'
+f = d * e    ; f.label = 'f'
 
+f.backward()
 
+draw_dot(f).render()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# %%
 
 
