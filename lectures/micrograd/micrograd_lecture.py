@@ -137,18 +137,6 @@ L
 
 # %%
 
-a = Value(2.0)
-b = Value(-3.0)
-c = Value(10.0)
-
-d = a * b + c
-
-d._prev
-d._op
-
-
-# %%
-
 
 from graphviz import Digraph
 
@@ -195,4 +183,118 @@ def draw_dot(root):
 
 # %%
 
-draw_dot(L)
+draw_dot(L).render()
+
+# %%
+
+a.data += 0.01 * a.grad
+b.data += 0.01 * b.grad
+c.data += 0.01 * c.grad
+f.data += 0.01 * f.grad
+
+e = a * b
+d = e + c
+L = d * f
+
+print(L.data)
+
+# %%
+
+
+def lol():
+
+    h = 0.001
+
+    a = Value(2.0, label="a")
+    b = Value(-3.0, label="b")
+    c = Value(10.0, label="c")
+    e = a * b
+    e.label = "e"
+    d = e + c
+    d.label = "d"
+    f = Value(-2.0, label="f")
+    L = d * f
+    L.label = "L"
+    L1 = L.data
+
+    a = Value(2.0, label="a")
+    b = Value(-3.0, label="b")
+    b.data += h
+    c = Value(10.0, label="c")
+    e = a * b
+    e.label = "e"
+    d = e + c
+    d.label = "d"
+    f = Value(-2.0, label="f")
+    L = d * f
+    L.label = "L"
+    L2 = L.data
+
+    print((L2 - L1) / h)
+
+
+lol()
+
+
+# %%
+
+plt.plot(np.arange(-5,5,0.2), np.tanh(np.arange(-5,5,0.2)))
+plt.grid()
+plt.show()
+
+# %%
+
+# inputs x1,x2
+x1 = Value(2.0, label='x1')
+x2 = Value(0.0, label='x2')
+# weights w1,w2
+w1 = Value(-3.0, label='w1')
+w2 = Value(1.0, label='w2')
+# bias of the neuron
+b = Value(6.8813735870195432, label='b')
+# x1*w1 + x2*w2 + b
+x1w1 = x1*w1; x1w1.label = 'x1*w1'
+x2w2 = x2*w2; x2w2.label = 'x2*w2'
+x1w1x2w2 = x1w1 + x2w2; x1w1x2w2.label = 'x1*w1 + x2*w2'
+n = x1w1x2w2 + b; n.label = 'n'
+o = n.tanh(); o.label = 'o'
+
+# %%
+
+draw_dot(o).render()
+
+# %%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
