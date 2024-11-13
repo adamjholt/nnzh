@@ -8,22 +8,42 @@ Working through [Andrej Karpathys course](https://github.com/karpathy/nn-zero-to
 >
 > – Andrej Karpathy
 
-__What is [micrograd](https://github.com/karpathy/micrograd)?__ A tiny scalar-valued autograd engine that implements backpropagation (reverse-mode autodiff) over a dynamically built DAG and a small neural networks library on top of it with a PyTorch-like API. In other words, it's a super simple mini Pytorch _without_ the complexities of dealing with tensors.
+__What is [micrograd](https://github.com/karpathy/micrograd)?__
+A tiny scalar-valued autograd engine that implements backpropagation (reverse-mode autodiff) over a dynamically built DAG and a small neural networks library on top of it with a PyTorch-like API. In other words, it's a super simple mini Pytorch _without_ the complexities of dealing with tensors.
 
-__What is autograd?__ Automatic gradient, a system that automatically tracks mathematical operations and builds a computation graph of those operations, i.e., the DAG (directed acyclic graph).
+__What is autograd?__
+Automatic gradient, a system that automatically tracks mathematical operations and builds a computation graph of those operations, i.e., a DAG (directed acyclic graph).
 
-__What is backpropagation?__ An algorithm that computes the gradients (derivates) of the loss function with respect to the weights of the neural network. Used to tune the weights during training in order to minimize the loss. It works by applying the chain rule backwards from the output of the network, through each layer, to the inputs. Note that backpropagation is a general algorithm not limited to neural networks.
+__What is backpropagation?__
+An efficient way to compute gradients of a scalar loss with respect to many parameters by applying the chain rule in reverse through the computation graph (reverse-mode autodiff).
 
-__What is a loss function?__ A function that measures the difference between the neural network outputs and the correct values. In simple terms, a loss function tracks the degree of error in the model's outputs.
+__What is a loss function?__
+A scalar function that measures how wrong the model’s predictions are. Training tries to minimize this value over the dataset.
 
-__What is a gradient?__ In neural networks, a gradient is a vector of partial derivatives of the loss function with respect to the model’s weights and biases.  It indicates the direction and magnitude of the steepest increase in error, allowing _gradient descent_ to adjust in the opposite direction to optimize (minimize) loss.
+__What is a gradient?__
+A vector of partial derivatives indicating how the function changes with respect to each input/parameter. For optimization, it points in the direction of steepest increase (so you move opposite to it for gradient descent).
 
 __What is a vector?__
+An ordered list of numbers that represents quantities like parameters or gradients in parameter space.
 
-__What is a derivative?__
+What is a derivative?
+A number that describes how a function changes when its input changes by a tiny amount (rate of change). For multi-variable functions, that idea becomes partial derivatives.
 
 __Why partial derivatives?__
+Because most functions depend on multiple variables/parameters. Partial derivatives quantify sensitivity with respect to one variable while holding the others fixed, enabling gradient-based optimization.
 
 __What is a neural network?__
+A function approximator built from layers of simple differentiable computations (e.g., weighted sums plus nonlinearities). It has parameters (weights/biases) learned by minimizing a loss using backpropagation.
 
+__What is gradient descent?__
+Gradient descent is an optimization algorithm that updates parameters in the opposite direction of the gradient of a loss function to reduce it (hence _desent_).
+
+If parameters are \(\theta\) and loss is \(L(\theta)\), a single update step is:
+
+```math
+\theta \leftarrow \theta - \alpha \nabla_\theta L(\theta)
+```
+where:
+- \(\nabla_\theta L(\theta)\) is the gradient of the loss w.r.t. the parameters
+- \(\alpha\) is the learning rate (step size)
 
