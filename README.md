@@ -38,12 +38,12 @@ A function approximator built from layers of simple differentiable computations 
 __What is gradient descent?__
 Gradient descent is an optimization algorithm that updates parameters in the opposite direction of the gradient of a loss function to reduce it (hence _desent_).
 
-If parameters are \(\theta\) and loss is \(L(\theta)\), a single update step is:
+If parameters are `θ` and loss is `L(θ)`, a single update step is:
 
 ```math
-\theta \leftarrow \theta - \alpha \nabla_\theta L(\theta)
+\theta \leftarrow \theta - \alpha \nabla_{\theta} L(\theta)
 ```
-where:
-- \(\nabla_\theta L(\theta)\) is the gradient of the loss w.r.t. the parameters
-- \(\alpha\) is the learning rate (step size)
 
+where:
+- `∇_θ L(θ)` is the gradient of the loss w.r.t. the parameters  
+- `α` is the learning rate (step size)
